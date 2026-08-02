@@ -1,0 +1,73 @@
+{
+  "_description": "Dangerous circuit with multiple critical faults: reversed LED polarity, a switch directly shorting VCC to GND, and an LED with no current-limiting resistor. Use this to see all the red CRITICAL findings.",
+  "components": [
+    {
+      "id": "BAT1",
+      "type": "battery",
+      "value": 5,
+      "unit": "V",
+      "pins": [
+        { "name": "positive", "node": "VCC" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": {}
+    },
+    {
+      "id": "LED_BAD",
+      "type": "LED",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "anode",   "node": "GND" },
+        { "name": "cathode", "node": "VCC" }
+      ],
+      "properties": { "note": "REVERSED — anode on GND, cathode on VCC!" }
+    },
+    {
+      "id": "LED_NO_R",
+      "type": "LED",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "anode",   "node": "VCC" },
+        { "name": "cathode", "node": "GND" }
+      ],
+      "properties": { "note": "Direct across supply — no resistor!" }
+    },
+    {
+      "id": "SW_SHORT",
+      "type": "switch",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "a", "node": "VCC" },
+        { "name": "b", "node": "GND" }
+      ],
+      "properties": { "note": "Switch with no load — closes a dead short!" }
+    },
+    {
+      "id": "R_LOW",
+      "type": "resistor",
+      "value": 5,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "VCC" },
+        { "name": "b", "node": "GND" }
+      ],
+      "properties": { "note": "5V / 5Ω = 1A — way over 200mA threshold" }
+    }
+  ],
+  "connections": [
+    { "component_id": "BAT1",    "pin_name": "positive", "node": "VCC" },
+    { "component_id": "BAT1",    "pin_name": "negative", "node": "GND" },
+    { "component_id": "LED_BAD", "pin_name": "anode",    "node": "GND" },
+    { "component_id": "LED_BAD", "pin_name": "cathode",  "node": "VCC" },
+    { "component_id": "LED_NO_R","pin_name": "anode",    "node": "VCC" },
+    { "component_id": "LED_NO_R","pin_name": "cathode",  "node": "GND" },
+    { "component_id": "SW_SHORT","pin_name": "a",        "node": "VCC" },
+    { "component_id": "SW_SHORT","pin_name": "b",        "node": "GND" },
+    { "component_id": "R_LOW",   "pin_name": "a",        "node": "VCC" },
+    { "component_id": "R_LOW",   "pin_name": "b",        "node": "GND" }
+  ],
+  "supply_voltage": 5.0
+}

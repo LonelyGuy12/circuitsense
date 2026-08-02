@@ -1,0 +1,150 @@
+{
+  "_description": "Arduino Uno-like microcontroller with exposed JTAG/UART debug pins, no brown-out protection capacitor, and an LED without a current-limiting resistor on D13. Intentionally has multiple correctness + security issues for demonstration.",
+  "components": [
+    {
+      "id": "MCU1",
+      "type": "microcontroller",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "VCC",       "node": "VCC_5V" },
+        { "name": "GND",       "node": "GND" },
+        { "name": "RESET",     "node": "node_reset" },
+        { "name": "D13",       "node": "node_d13" },
+        { "name": "JTAG_TDI",  "node": "node_jtag_tdi" },
+        { "name": "JTAG_TDO",  "node": "node_jtag_tdo" },
+        { "name": "JTAG_TCK",  "node": "node_jtag_tck" },
+        { "name": "JTAG_TMS",  "node": "node_jtag_tms" },
+        { "name": "UART_TX",   "node": "node_uart_tx" },
+        { "name": "UART_RX",   "node": "node_uart_rx" }
+      ],
+      "properties": {
+        "part": "ATmega328P",
+        "clock_MHz": 16
+      }
+    },
+    {
+      "id": "XTAL1",
+      "type": "crystal",
+      "value": 16,
+      "unit": "MHz",
+      "pins": [
+        { "name": "a", "node": "node_xtal_a" },
+        { "name": "b", "node": "node_xtal_b" }
+      ],
+      "properties": {}
+    },
+    {
+      "id": "BAT1",
+      "type": "battery",
+      "value": 5,
+      "unit": "V",
+      "pins": [
+        { "name": "positive", "node": "VCC_5V" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": {}
+    },
+    {
+      "id": "LED_D13",
+      "type": "LED",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "anode",   "node": "node_d13" },
+        { "name": "cathode", "node": "GND" }
+      ],
+      "properties": {
+        "color": "green",
+        "note": "Intentionally missing current-limiting resistor!"
+      }
+    },
+    {
+      "id": "C_BYPASS",
+      "type": "capacitor",
+      "value": 100e-9,
+      "unit": "F",
+      "pins": [
+        { "name": "positive", "node": "VCC_5V" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": { "purpose": "bypass / decoupling" }
+    },
+    {
+      "id": "R_RESET",
+      "type": "resistor",
+      "value": 10000,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "VCC_5V" },
+        { "name": "b", "node": "node_reset" }
+      ],
+      "properties": { "purpose": "RESET pull-up" }
+    },
+    {
+      "id": "HEADER_JTAG",
+      "type": "IC",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "TDI", "node": "node_jtag_tdi" },
+        { "name": "TDO", "node": "node_jtag_tdo" },
+        { "name": "TCK", "node": "node_jtag_tck" },
+        { "name": "TMS", "node": "node_jtag_tms" },
+        { "name": "VCC", "node": "VCC_5V" },
+        { "name": "GND", "node": "GND" }
+      ],
+      "properties": {
+        "type": "2x5 pin header",
+        "note": "Exposed JTAG debug interface — no series resistors, no protection"
+      }
+    },
+    {
+      "id": "HEADER_UART",
+      "type": "IC",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "TX",  "node": "node_uart_tx" },
+        { "name": "RX",  "node": "node_uart_rx" },
+        { "name": "GND", "node": "GND" }
+      ],
+      "properties": {
+        "type": "3-pin header",
+        "note": "Exposed UART — directly connected to MCU, no level shifter"
+      }
+    }
+  ],
+  "connections": [
+    { "component_id": "BAT1",        "pin_name": "positive",  "node": "VCC_5V" },
+    { "component_id": "BAT1",        "pin_name": "negative",  "node": "GND" },
+    { "component_id": "MCU1",        "pin_name": "VCC",       "node": "VCC_5V" },
+    { "component_id": "MCU1",        "pin_name": "GND",       "node": "GND" },
+    { "component_id": "MCU1",        "pin_name": "RESET",     "node": "node_reset" },
+    { "component_id": "MCU1",        "pin_name": "D13",       "node": "node_d13" },
+    { "component_id": "MCU1",        "pin_name": "JTAG_TDI",  "node": "node_jtag_tdi" },
+    { "component_id": "MCU1",        "pin_name": "JTAG_TDO",  "node": "node_jtag_tdo" },
+    { "component_id": "MCU1",        "pin_name": "JTAG_TCK",  "node": "node_jtag_tck" },
+    { "component_id": "MCU1",        "pin_name": "JTAG_TMS",  "node": "node_jtag_tms" },
+    { "component_id": "MCU1",        "pin_name": "UART_TX",   "node": "node_uart_tx" },
+    { "component_id": "MCU1",        "pin_name": "UART_RX",   "node": "node_uart_rx" },
+    { "component_id": "XTAL1",       "pin_name": "a",         "node": "node_xtal_a" },
+    { "component_id": "XTAL1",       "pin_name": "b",         "node": "node_xtal_b" },
+    { "component_id": "LED_D13",     "pin_name": "anode",     "node": "node_d13" },
+    { "component_id": "LED_D13",     "pin_name": "cathode",   "node": "GND" },
+    { "component_id": "C_BYPASS",    "pin_name": "positive",  "node": "VCC_5V" },
+    { "component_id": "C_BYPASS",    "pin_name": "negative",  "node": "GND" },
+    { "component_id": "R_RESET",     "pin_name": "a",         "node": "VCC_5V" },
+    { "component_id": "R_RESET",     "pin_name": "b",         "node": "node_reset" },
+    { "component_id": "HEADER_JTAG", "pin_name": "TDI",       "node": "node_jtag_tdi" },
+    { "component_id": "HEADER_JTAG", "pin_name": "TDO",       "node": "node_jtag_tdo" },
+    { "component_id": "HEADER_JTAG", "pin_name": "TCK",       "node": "node_jtag_tck" },
+    { "component_id": "HEADER_JTAG", "pin_name": "TMS",       "node": "node_jtag_tms" },
+    { "component_id": "HEADER_JTAG", "pin_name": "VCC",       "node": "VCC_5V" },
+    { "component_id": "HEADER_JTAG", "pin_name": "GND",       "node": "GND" },
+    { "component_id": "HEADER_UART", "pin_name": "TX",        "node": "node_uart_tx" },
+    { "component_id": "HEADER_UART", "pin_name": "RX",        "node": "node_uart_rx" },
+    { "component_id": "HEADER_UART", "pin_name": "GND",       "node": "GND" }
+  ],
+  "supply_voltage": 5.0
+}

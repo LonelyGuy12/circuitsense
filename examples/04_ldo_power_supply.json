@@ -1,0 +1,103 @@
+{
+  "_description": "Precision 3.3V rail from 5V using a 1117 LDO voltage regulator. Includes input/output bypass caps and a voltage divider feedback network for adjustable output. Clean circuit.",
+  "components": [
+    {
+      "id": "V_IN",
+      "type": "battery",
+      "value": 5,
+      "unit": "V",
+      "pins": [
+        { "name": "positive", "node": "VCC_5V" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": {}
+    },
+    {
+      "id": "U1",
+      "type": "voltage_regulator",
+      "value": 3.3,
+      "unit": "V",
+      "pins": [
+        { "name": "IN",  "node": "VCC_5V" },
+        { "name": "OUT", "node": "VCC_3V3" },
+        { "name": "GND", "node": "GND" },
+        { "name": "ADJ", "node": "node_adj" }
+      ],
+      "properties": { "part": "AMS1117-3.3", "dropout_V": 1.2, "max_current_A": 1.0 }
+    },
+    {
+      "id": "C_IN",
+      "type": "capacitor",
+      "value": 10e-6,
+      "unit": "F",
+      "pins": [
+        { "name": "positive", "node": "VCC_5V" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": { "type": "electrolytic", "voltage_rating": "10V" }
+    },
+    {
+      "id": "C_OUT",
+      "type": "capacitor",
+      "value": 10e-6,
+      "unit": "F",
+      "pins": [
+        { "name": "positive", "node": "VCC_3V3" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": { "type": "electrolytic", "voltage_rating": "10V" }
+    },
+    {
+      "id": "C_BYPASS",
+      "type": "capacitor",
+      "value": 100e-9,
+      "unit": "F",
+      "pins": [
+        { "name": "positive", "node": "VCC_3V3" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": { "type": "ceramic", "purpose": "high-frequency bypass" }
+    },
+    {
+      "id": "R1",
+      "type": "resistor",
+      "value": 806,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "VCC_3V3" },
+        { "name": "b", "node": "node_adj" }
+      ],
+      "properties": { "purpose": "feedback top" }
+    },
+    {
+      "id": "R2",
+      "type": "resistor",
+      "value": 2370,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "node_adj" },
+        { "name": "b", "node": "GND" }
+      ],
+      "properties": { "purpose": "feedback bottom" }
+    }
+  ],
+  "connections": [
+    { "component_id": "V_IN",    "pin_name": "positive", "node": "VCC_5V" },
+    { "component_id": "V_IN",    "pin_name": "negative", "node": "GND" },
+    { "component_id": "U1",      "pin_name": "IN",       "node": "VCC_5V" },
+    { "component_id": "U1",      "pin_name": "OUT",      "node": "VCC_3V3" },
+    { "component_id": "U1",      "pin_name": "GND",      "node": "GND" },
+    { "component_id": "U1",      "pin_name": "ADJ",      "node": "node_adj" },
+    { "component_id": "C_IN",    "pin_name": "positive", "node": "VCC_5V" },
+    { "component_id": "C_IN",    "pin_name": "negative", "node": "GND" },
+    { "component_id": "C_OUT",   "pin_name": "positive", "node": "VCC_3V3" },
+    { "component_id": "C_OUT",   "pin_name": "negative", "node": "GND" },
+    { "component_id": "C_BYPASS","pin_name": "positive", "node": "VCC_3V3" },
+    { "component_id": "C_BYPASS","pin_name": "negative", "node": "GND" },
+    { "component_id": "R1",      "pin_name": "a",        "node": "VCC_3V3" },
+    { "component_id": "R1",      "pin_name": "b",        "node": "node_adj" },
+    { "component_id": "R2",      "pin_name": "a",        "node": "node_adj" },
+    { "component_id": "R2",      "pin_name": "b",        "node": "GND" }
+  ],
+  "supply_voltage": 5.0
+}

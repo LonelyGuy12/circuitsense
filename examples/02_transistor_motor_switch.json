@@ -1,0 +1,101 @@
+{
+  "_description": "Classic NPN transistor switch driving a motor. Includes base resistor, flyback diode across motor, and pull-down on base. Demonstrates: Ohm's law check on base resistor, flyback diode polarity.",
+  "components": [
+    {
+      "id": "V1",
+      "type": "battery",
+      "value": 12,
+      "unit": "V",
+      "pins": [
+        { "name": "positive", "node": "VCC_12V" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": {}
+    },
+    {
+      "id": "V2",
+      "type": "battery",
+      "value": 3.3,
+      "unit": "V",
+      "pins": [
+        { "name": "positive", "node": "VCC_3V3" },
+        { "name": "negative", "node": "GND" }
+      ],
+      "properties": { "note": "Logic supply from MCU GPIO" }
+    },
+    {
+      "id": "R_BASE",
+      "type": "resistor",
+      "value": 1000,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "VCC_3V3" },
+        { "name": "b", "node": "node_base" }
+      ],
+      "properties": { "purpose": "base current limiting" }
+    },
+    {
+      "id": "R_PULLDOWN",
+      "type": "resistor",
+      "value": 10000,
+      "unit": "ohm",
+      "pins": [
+        { "name": "a", "node": "node_base" },
+        { "name": "b", "node": "GND" }
+      ],
+      "properties": { "purpose": "pull-down to prevent floating base" }
+    },
+    {
+      "id": "Q1",
+      "type": "transistor",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "base",      "node": "node_base" },
+        { "name": "collector", "node": "node_motor_lo" },
+        { "name": "emitter",   "node": "GND" }
+      ],
+      "properties": { "type": "NPN", "part": "2N2222", "hFE": 100 }
+    },
+    {
+      "id": "MOTOR1",
+      "type": "relay",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "a", "node": "VCC_12V" },
+        { "name": "b", "node": "node_motor_lo" }
+      ],
+      "properties": { "type": "DC motor", "stall_current_A": 1.5 }
+    },
+    {
+      "id": "D_FLYBACK",
+      "type": "diode",
+      "value": null,
+      "unit": null,
+      "pins": [
+        { "name": "anode",   "node": "node_motor_lo" },
+        { "name": "cathode", "node": "VCC_12V" }
+      ],
+      "properties": { "part": "1N4007", "purpose": "flyback / freewheeling diode" }
+    }
+  ],
+  "connections": [
+    { "component_id": "V1",         "pin_name": "positive",  "node": "VCC_12V" },
+    { "component_id": "V1",         "pin_name": "negative",  "node": "GND" },
+    { "component_id": "V2",         "pin_name": "positive",  "node": "VCC_3V3" },
+    { "component_id": "V2",         "pin_name": "negative",  "node": "GND" },
+    { "component_id": "R_BASE",     "pin_name": "a",         "node": "VCC_3V3" },
+    { "component_id": "R_BASE",     "pin_name": "b",         "node": "node_base" },
+    { "component_id": "R_PULLDOWN", "pin_name": "a",         "node": "node_base" },
+    { "component_id": "R_PULLDOWN", "pin_name": "b",         "node": "GND" },
+    { "component_id": "Q1",         "pin_name": "base",      "node": "node_base" },
+    { "component_id": "Q1",         "pin_name": "collector", "node": "node_motor_lo" },
+    { "component_id": "Q1",         "pin_name": "emitter",   "node": "GND" },
+    { "component_id": "MOTOR1",     "pin_name": "a",         "node": "VCC_12V" },
+    { "component_id": "MOTOR1",     "pin_name": "b",         "node": "node_motor_lo" },
+    { "component_id": "D_FLYBACK",  "pin_name": "anode",     "node": "node_motor_lo" },
+    { "component_id": "D_FLYBACK",  "pin_name": "cathode",   "node": "VCC_12V" }
+  ],
+  "supply_voltage": 12.0
+}
