@@ -1,30 +1,10 @@
 services:
-  # Backend: Python FastAPI Service
+  # Unified Backend & Frontend Web Service
   - type: web
-    name: circuitsense-backend
+    name: circuitsense
     env: python
-    rootDir: backend
-    buildCommand: "pip install -r requirements.txt"
-    startCommand: "uvicorn main:app --host 0.0.0.0 --port $PORT"
+    buildCommand: "./build.sh"
+    startCommand: "cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT"
     envVars:
       - key: NVIDIA_API_KEY
-        sync: false # Render will prompt you to enter this securely in their dashboard
-
-  # Frontend: React Vite Static Site
-  - type: web
-    name: circuitsense-frontend
-    env: static
-    rootDir: frontend
-    buildCommand: "npm install && npm run build"
-    staticPublishPath: "./dist"
-    envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: circuitsense-backend
-          envVarKey: RENDER_EXTERNAL_URL
-    # Rewrite all unmatched requests to index.html so React Router works correctly
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
+        sync: false # Render will prompt you to enter this securely

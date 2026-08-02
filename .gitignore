@@ -15,3 +15,5 @@ backend/.env
 # Frontend
 frontend/node_modules/
 frontend/dist/
+backend/static/*
+!backend/static/.keep
