@@ -2,9 +2,10 @@ import { useState, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Upload, Plus, Trash2, Cpu, Zap, ChevronRight,
-  Camera, FileText, AlertCircle, Loader2
+  Camera, FileText, AlertCircle, Loader2, PenTool
 } from 'lucide-react'
 import { submitManualNetlist, extractNetlistFromPhoto } from '../api/client'
+import SchematicBuilder from '../components/SchematicBuilder'
 
 const COMPONENT_TYPES = [
   'resistor', 'capacitor', 'LED', 'diode', 'IC',
@@ -125,6 +126,19 @@ export default function Landing() {
     }
   }
 
+  const handleBuildSubmit = async (netlist) => {
+    setError(null)
+    setLoading(true)
+    try {
+      const submission = await submitManualNetlist(netlist)
+      nav(`/review/${submission.id}`)
+    } catch (err) {
+      setError(err?.response?.data?.detail || err.message)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   // ── Photo ────────────────────────────────────────────────────────────────
 
   const handleFile = (file) => {
@@ -185,25 +199,28 @@ export default function Landing() {
       </div>
 
       {/* Mode toggle */}
-      <div className="flex gap-2 p-1 rounded-xl bg-surface-800/50 border border-white/5">
-        {[
-          { key: 'manual', icon: <FileText size={15} />, label: 'Manual Entry' },
-          { key: 'photo',  icon: <Camera size={15} />,   label: 'Upload Photo' },
-        ].map(tab => (
-          <button
-            key={tab.key}
-            id={`tab-${tab.key}`}
-            onClick={() => { setMode(tab.key); setError(null) }}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-lg
-                        text-sm font-medium transition-all duration-200
-                        ${mode === tab.key
-                          ? 'bg-brand-500 text-white shadow-lg shadow-brand-500/30'
-                          : 'text-slate-400 hover:text-white'}`}
-          >
-            {tab.icon}
-            {tab.label}
-          </button>
-        ))}
+      <div className="flex bg-surface-900 rounded-xl p-1 mb-8 shadow-inner overflow-hidden border border-white/5">
+        <button
+          onClick={() => setMode('photo')}
+          className={`flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all
+            ${mode === 'photo' ? 'bg-surface-800 text-brand-400 shadow-sm border border-white/5' : 'text-slate-400 hover:text-slate-200 hover:bg-surface-800/50'}`}
+        >
+          <Camera size={16} /> Photo Upload
+        </button>
+        <button
+          onClick={() => setMode('build')}
+          className={`flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all
+            ${mode === 'build' ? 'bg-surface-800 text-brand-400 shadow-sm border border-white/5' : 'text-slate-400 hover:text-slate-200 hover:bg-surface-800/50'}`}
+        >
+          <PenTool size={16} /> Draw Schematic
+        </button>
+        <button
+          onClick={() => setMode('manual')}
+          className={`flex-1 py-2.5 text-sm font-semibold rounded-lg flex items-center justify-center gap-2 transition-all
+            ${mode === 'manual' ? 'bg-surface-800 text-brand-400 shadow-sm border border-white/5' : 'text-slate-400 hover:text-slate-200 hover:bg-surface-800/50'}`}
+        >
+          <FileText size={16} /> Manual Entry
+        </button>
       </div>
 
       {/* ── MANUAL ENTRY ── */}
@@ -448,6 +465,27 @@ export default function Landing() {
               : <><Zap size={16} /> Extract & Review</>}
           </button>
         </form>
+      )}
+
+      {/* ── DRAW SCHEMATIC ── */}
+      {mode === 'build' && (
+        <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
+          <SchematicBuilder onAnalyze={handleBuildSubmit} />
+          {error && (
+            <div className={`mt-4 flex items-start gap-2 rounded-xl p-3 text-sm border
+              ${error.startsWith('📷')
+                ? 'bg-amber-500/10 border-amber-500/20 text-amber-300'
+                : 'bg-red-500/10 border-red-500/20 text-red-400'}`}>
+              <AlertCircle size={15} className="mt-0.5 shrink-0" />
+              {error}
+            </div>
+          )}
+          {loading && (
+            <div className="mt-4 flex items-center justify-center text-sm text-brand-400 gap-2">
+              <Loader2 size={16} className="animate-spin" /> Saving schematic...
+            </div>
+          )}
+        </div>
       )}
     </div>
   )
